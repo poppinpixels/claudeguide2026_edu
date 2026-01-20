@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude AI for Undervisere | Quickstart Guide</title>
+    <style>
+        :root {
+            --claude-orange: #D97706;
+            --claude-coral: #EA580C;
+            --claude-cream: #FEF3E2;
+            --claude-dark: #1C1917;
+            --claude-warm-gray: #44403C;
+            --claude-light-gray: #F5F5F4;
+            --gradient-primary: linear-gradient(135deg, #D97706 0%, #EA580C 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.7;
+            color: var(--claude-dark);
+            background: var(--claude-light-gray);
+        }
+
+        /* Navigation */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            z-index: 1000;
+            padding: 0 2rem;
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--claude-orange);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--claude-warm-gray);
+            font-weight: 500;
+            transition: color 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: var(--claude-orange);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-primary);
+            padding: 8rem 2rem 5rem;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Section Cards */
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--claude-cream);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.6rem;
+            color: var(--claude-dark);
+        }
+
+        .section p {
+            color: var(--claude-warm-gray);
+            margin-bottom: 1rem;
+        }
+
+        /* Interactive Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 0.7rem 1.2rem;
+            border: none;
+            background: var(--claude-light-gray);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--claude-warm-gray);
+        }
+
+        .tab:hover {
+            background: var(--claude-cream);
+        }
+
+        .tab.active {
+            background: var(--claude-orange);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Prompt Cards */
+        .prompt-card {
+            background: var(--claude-light-gray);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--claude-orange);
+        }
+
+        .prompt-card h4 {
+            color: var(--claude-dark);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .prompt-example {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 0.9rem;
+            color: var(--claude-warm-gray);
+            margin-top: 0.75rem;
+            position: relative;
+            white-space: pre-wrap;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: var(--claude-orange);
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--claude-coral);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e5e5;
+        }
+
+        .comparison-table th {
+            background: var(--claude-cream);
+            font-weight: 600;
+            color: var(--claude-dark);
+        }
+
+        .comparison-table tr:hover {
+            background: var(--claude-light-gray);
+        }
+
+        .check {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .partial {
+            color: var(--claude-orange);
+        }
+
+        /* Tip Boxes */
+        .tip-box {
+            background: linear-gradient(135deg, #FEF3E2 0%, #FDE68A 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .tip-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .tip-content h4 {
+            margin-bottom: 0.3rem;
+            color: var(--claude-dark);
+        }
+
+        .tip-content p {
+            margin: 0;
+            color: var(--claude-warm-gray);
+        }
+
+        /* Accordion */
+        .accordion-item {
+            border: 1px solid #e5e5e5;
+            border-radius: 10px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            padding: 1.2rem 1.5rem;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .accordion-header:hover {
+            background: var(--claude-light-gray);
+        }
+
+        .accordion-arrow {
+            transition: transform 0.3s;
+        }
+
+        .accordion-item.open .accordion-arrow {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            padding: 0 1.5rem 1.5rem;
+            background: white;
+        }
+
+        .accordion-item.open .accordion-content {
+            display: block;
+        }
+
+        /* Ethics Section Special Styling */
+        .ethics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .ethics-card {
+            background: var(--claude-cream);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .ethics-card h4 {
+            margin: 0.75rem 0 0.5rem;
+            color: var(--claude-dark);
+        }
+
+        .ethics-card p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .ethics-icon {
+            font-size: 2rem;
+        }
+
+        /* Quick Start Checklist */
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist-box {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--claude-orange);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .checklist-box.checked {
+            background: var(--claude-orange);
+            color: white;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--claude-dark);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .footer a {
+            color: var(--claude-orange);
+            text-decoration: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section {
+                padding: 1.5rem;
+            }
+
+            .tabs {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-logo">Claude for Undervisere</div>
+            <ul class="nav-links">
+                <li><a href="#hvorfor">Hvorfor Claude?</a></li>
+                <li><a href="#prompts">Prompts</a></li>
+                <li><a href="#paedagogik">Pædagogik</a></li>
+                <li><a href="#etik">Etik</a></li>
+                <li><a href="#start">Kom i gang</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-badge">Quickstart Guide 2026</div>
+        <h1>Claude AI for Undervisere</h1>
+        <p class="hero-subtitle">Den komplette guide til at bruge den mest etiske og pædagogisk stærke AI i din undervisning</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Hvorfor Claude Section -->
+        <section id="hvorfor" class="section">
+            <div class="section-header">
+                <div class="section-icon">🎯</div>
+                <h2>Hvorfor vælge Claude?</h2>
+            </div>
+
+            <p>Claude er ikke bare endnu en AI-chatbot. Den er designet fra bunden med fokus på sikkerhed, ærlighed og pædagogisk værdi. Her er hvorfor den skiller sig ud:</p>
+
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Egenskab</th>
+                        <th>Claude</th>
+                        <th>ChatGPT</th>
+                        <th>Andre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Ærlig om usikkerhed</strong></td>
+                        <td class="check">✓ Indrømmer begrænsninger</td>
+                        <td class="partial">~ Varierende</td>
+                        <td class="partial">~ Varierende</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kontekstvindue</strong></td>
+                        <td class="check">✓ Op til 1 mio. tokens</td>
+                        <td class="partial">128K tokens</td>
+                        <td class="partial">32-128K</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Sokratisk tilgang</strong></td>
+                        <td class="check">✓ Stiller spørgsmål tilbage</td>
+                        <td class="partial">~ Giver ofte bare svar</td>
+                        <td class="partial">~ Varierende</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Etisk grundlag</strong></td>
+                        <td class="check">✓ Constitutional AI</td>
+                        <td class="partial">RLHF</td>
+                        <td class="partial">Varierende</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Virksomhed</strong></td>
+                        <td class="check">✓ Public Benefit Corp.</td>
+                        <td class="partial">For-profit</td>
+                        <td class="partial">For-profit</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="tip-box">
+                <span class="tip-icon">💡</span>
+                <div class="tip-content">
+                    <h4>Vidste du?</h4>
+                    <p>Anthropic blev grundlagt af tidligere OpenAI-forskere, der forlod virksomheden, fordi de ville prioritere AI-sikkerhed højere. Claude er bygget på "Constitutional AI" - et system hvor AI'en følger eksplicitte, inspicerbare værdiprincipper.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Praktiske Prompts Section -->
+        <section id="prompts" class="section">
+            <div class="section-header">
+                <div class="section-icon">✍️</div>
+                <h2>Praktiske Prompts til Undervisning</h2>
+            </div>
+
+            <p>Her er konkrete prompts, du kan kopiere og tilpasse. Vælg dit undervisningsområde:</p>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="forberedelse">Forberedelse</button>
+                <button class="tab" data-tab="differentiering">Differentiering</button>
+                <button class="tab" data-tab="feedback">Feedback</button>
+                <button class="tab" data-tab="inspiration">Inspiration</button>
+            </div>
+
+            <!-- Forberedelse Tab -->
+            <div class="tab-content active" id="forberedelse">
+                <div class="prompt-card">
+                    <h4>Lav en lektionsplan</h4>
+                    <p>Få hjælp til at strukturere en undervisningsgang med klare læringsmål.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Jeg skal undervise [klassetrin] i [emne] i [antal] minutter. Eleverne har [forudsætninger]. Hjælp mig med at lave en lektionsplan med: 1) Klare læringsmål, 2) Aktiverende indledning, 3) Hovedaktiviteter med tidsangivelser, 4) Afsluttende opsamling. Inkludér gerne varierede arbejdsformer.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Generer quizspørgsmål</h4>
+                    <p>Lav hurtigt forståelsesspørgsmål til et emne.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Lav 10 multiple choice-spørgsmål om [emne] til [klassetrin]. Inkludér: 3 faktaspørgsmål (huske), 4 forståelsesspørgsmål (forklare), 3 anvendelsesspørgsmål (bruge i ny kontekst). Giv 4 svarmuligheder per spørgsmål og markér det korrekte svar.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Forenkl fagligt stof</h4>
+                    <p>Få komplekse emner forklaret på et niveau, dine elever kan forstå.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Forklar [komplekst emne] som om du taler til en [klassetrin]-elev. Brug hverdagseksempler og analogier. Undgå fagtermer, eller forklar dem når de bruges. Afslut med 2-3 spørgsmål, eleven kan reflektere over.</div>
+                </div>
+            </div>
+
+            <!-- Differentiering Tab -->
+            <div class="tab-content" id="differentiering">
+                <div class="prompt-card">
+                    <h4>Tilpas sværhedsgrad</h4>
+                    <p>Lav tre versioner af samme opgave til forskellige niveauer.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Her er en opgave: [indsæt opgave]. Lav tre versioner: 1) STØTTE-version med ekstra hjælpespørgsmål og eksempler, 2) STANDARD-version som den er, 3) UDFORDRING-version med udvidede krav og åbne spørgsmål. Bevar samme læringsmål på tværs af niveauer.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Stilladsér for ordblinde</h4>
+                    <p>Tilpas tekster og opgaver til elever med læsevanskeligheder.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Omskriv denne tekst, så den er lettere tilgængelig for ordblinde elever: [indsæt tekst]. Brug korte sætninger (max 15 ord), undgå passive konstruktioner, brug punktopstillinger hvor muligt, og fremhæv nøgleord. Bevar det faglige indhold.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Skab varierede læringsaktiviteter</h4>
+                    <p>Appellér til forskellige læringsstile med samme indhold.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>For emnet [emne], foreslå 5 forskellige aktiviteter der dækker: 1) Visuel læring (billeder, diagrammer), 2) Auditiv læring (diskussion, mundtlig), 3) Kinæstetisk læring (bevægelse, hands-on), 4) Læse/skrive (noter, tekst), 5) Social læring (gruppearbejde). Hver aktivitet skal tage ca. 15-20 minutter.</div>
+                </div>
+            </div>
+
+            <!-- Feedback Tab -->
+            <div class="tab-content" id="feedback">
+                <div class="prompt-card">
+                    <h4>Giv formativ feedback</h4>
+                    <p>Få hjælp til at formulere konstruktiv feedback på elevarbejde.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Hjælp mig med at give feedback på denne elevbesvarelse: [indsæt tekst]. Læringsmålet var: [mål]. Strukturér feedback som: 1) Hvad lykkes godt (specifikt), 2) Et konkret forbedringspunkt, 3) Et fremadrettet spørgsmål eleven kan arbejde videre med. Hold tonen opmuntrende og specifik.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Lav vurderingskriterier</h4>
+                    <p>Opret transparente kriterier til en opgave.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Lav en vurderingsrubrik til denne opgave: [beskriv opgave]. Inkludér 4-5 kriterier med 4 niveauer (utilstrækkelig, delvist opfyldt, opfyldt, fremragende). Formulér kriterierne så eleverne selv kan bruge dem til selvevaluering.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Analysér klassesæt</h4>
+                    <p>Find mønstre i flere elevers besvarelser.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Her er uddrag fra [antal] elevbesvarelser om [emne]: [indsæt]. Identificér: 1) Fælles styrker i klassen, 2) Typiske misforståelser eller fejlmønstre, 3) Forslag til klasseundervisning der adresserer de fundne udfordringer.</div>
+                </div>
+            </div>
+
+            <!-- Inspiration Tab -->
+            <div class="tab-content" id="inspiration">
+                <div class="prompt-card">
+                    <h4>Brainstorm nye vinkler</h4>
+                    <p>Få friske idéer til at gøre et emne engagerende.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Jeg skal undervise i [emne], som elever ofte finder kedeligt/svært. Giv mig 5 overraskende, engagerende indgange til emnet. Tænk: provokerende spørgsmål, aktuelle forbindelser, uventede vinkler, hands-on eksperimenter, eller forbindelser til elevernes hverdag.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Skab tværfaglige forbindelser</h4>
+                    <p>Find naturlige koblinger mellem fag.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Jeg underviser i [fag] og arbejder med emnet [emne]. Foreslå meningsfulde forbindelser til følgende andre fag: [list fag]. For hver forbindelse: beskriv den faglige kobling og en konkret aktivitet der kunne udføres tværfagligt.</div>
+                </div>
+
+                <div class="prompt-card">
+                    <h4>Design et projekt</h4>
+                    <p>Få en ramme for projektorienteret undervisning.</p>
+                    <div class="prompt-example">
+                        <button class="copy-btn" onclick="copyPrompt(this)">Kopiér</button>Design et [antal uger] projekt om [emne] for [klassetrin]. Projektet skal inkludere: et autentisk problem fra virkeligheden, tydelige milepæle, varierede arbejdsformer, formativ evaluering undervejs, og et produkt eleverne præsenterer. Giv også forslag til stilladsering for elever der har brug for støtte.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pædagogik Section -->
+        <section id="paedagogik" class="section">
+            <div class="section-header">
+                <div class="section-icon">🎓</div>
+                <h2>Pædagogisk Integration</h2>
+            </div>
+
+            <p>Claude er designet til at understøtte læring - ikke erstatte den. Her er de vigtigste pædagogiske principper:</p>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    Den sokratiske tilgang
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Claude er trænet til at stille spørgsmål tilbage i stedet for bare at give svar. Det betyder, at den naturligt understøtter dybdelæring:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li>Beder elever forklare deres tankegang</li>
+                        <li>Spørger "Hvorfor tror du det?" i stedet for at bekræfte</li>
+                        <li>Hjælper med at identificere huller i forståelsen</li>
+                        <li>Guider mod indsigt frem for at servere konklusioner</li>
+                    </ul>
+                    <p><strong>Prøv:</strong> Bed Claude om at hjælpe dig med at forstå et emne uden at give dig svaret direkte.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    Samarbejde, ikke erstatning
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Den bedste brug af Claude i undervisning er som sparringspartner - både for dig og dine elever:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li><strong>For underviseren:</strong> Idéudvikling, differentiering, feedback-formulering</li>
+                        <li><strong>For eleven:</strong> Stilladsering, begrebsafklaring, øvelse med feedback</li>
+                    </ul>
+                    <p>Claude er eksplicit designet til at arbejde <em>sammen med</em> brugeren, ikke til at overtage opgaven.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    Hvornår Claude IKKE er svaret
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>Ansvarlig brug kræver at vide, hvornår AI ikke bør bruges:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li>❌ Når processen <em>er</em> læringen (skriveprocesser, problemløsning)</li>
+                        <li>❌ Til endelig vurdering af elevers kompetencer</li>
+                        <li>❌ Som erstatning for menneskelig relation og omsorg</li>
+                        <li>❌ Når eleven har brug for at øve sig og fejle</li>
+                        <li>❌ Til følsomme emner der kræver professionel vurdering</li>
+                    </ul>
+                    <p><strong>Claude er ærlig om dette:</strong> Den vil selv fortælle dig, når den ikke er det rigtige værktøj.</p>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    Lær elever at prompte
+                    <span class="accordion-arrow">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <p>At kunne kommunikere effektivt med AI er en kernekompetence. Lær eleverne:</p>
+                    <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                        <li><strong>Kontekst:</strong> Giv baggrund for spørgsmålet</li>
+                        <li><strong>Rolle:</strong> Bed Claude indtage et perspektiv</li>
+                        <li><strong>Format:</strong> Specificér hvordan svaret skal struktureres</li>
+                        <li><strong>Iteration:</strong> Følg op og præcisér</li>
+                    </ul>
+                    <p>God promptning er kritisk tænkning + kommunikation - kompetencer der rækker langt ud over AI.</p>
+                </div>
+            </div>
+
+            <div class="tip-box">
+                <span class="tip-icon">🎯</span>
+                <div class="tip-content">
+                    <h4>Guldreglen</h4>
+                    <p>Brug Claude til det, der frigør tid til det, kun du kan: relationen til dine elever, den situerede vurdering, og det faglige skøn der kræver menneskeligt nærvær.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Etik Section -->
+        <section id="etik" class="section">
+            <div class="section-header">
+                <div class="section-icon">⚖️</div>
+                <h2>Etik og Ansvarlig AI</h2>
+            </div>
+
+            <p>At vælge Claude er også et etisk valg. Her er hvorfor det betyder noget:</p>
+
+            <div class="ethics-grid">
+                <div class="ethics-card">
+                    <div class="ethics-icon">🏛️</div>
+                    <h4>Constitutional AI</h4>
+                    <p>Claudes værdier er eksplicitte og kan inspiceres - ikke skjulte i uigennemskuelige data.</p>
+                </div>
+                <div class="ethics-card">
+                    <div class="ethics-icon">🤝</div>
+                    <h4>Public Benefit Corp.</h4>
+                    <p>Anthropic er juridisk forpligtet til at vægte samfundsgavn, ikke kun aktionærernes profit.</p>
+                </div>
+                <div class="ethics-card">
+                    <div class="ethics-icon">🔍</div>
+                    <h4>Transparent om fejl</h4>
+                    <p>Claude indrømmer usikkerhed og fortæller, når den ikke ved noget - i stedet for at opfinde.</p>
+                </div>
+                <div class="ethics-card">
+                    <div class="ethics-icon">🛡️</div>
+                    <h4>Sikkerhed først</h4>
+                    <p>Anthropic blev grundlagt af folk, der mente AI-sikkerhed skulle prioriteres højere.</p>
+                </div>
+            </div>
+
+            <h3 style="margin: 2rem 0 1rem; font-size: 1.2rem;">Hvad betyder "Constitutional AI"?</h3>
+            <p>Traditionel AI trænes ved at mennesker vurderer tusindvis af svar som "gode" eller "dårlige" - ofte med skjulte, ubevidste kriterier. Constitutional AI er anderledes: Claude følger et eksplicit sæt principper, der kan læses og vurderes. Det giver:</p>
+            <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+                <li><strong>Gennemsigtighed:</strong> Du kan faktisk forstå, hvorfor Claude svarer som den gør</li>
+                <li><strong>Konsistens:</strong> Principperne gælder på tværs af situationer</li>
+                <li><strong>Færre blindspots:</strong> Værdierne er bevidste, ikke tilfældigt indlært fra data</li>
+            </ul>
+
+            <div class="tip-box">
+                <span class="tip-icon">💬</span>
+                <div class="tip-content">
+                    <h4>Tal med dine elever om det</h4>
+                    <p>At vælge AI bevidst er en del af digital dannelse. Diskutér med eleverne: Hvem laver de AI'er, vi bruger? Hvad er deres forretningsmodel? Hvilke værdier har de? Det er kritisk tænkning i praksis.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Kom i gang Section -->
+        <section id="start" class="section">
+            <div class="section-header">
+                <div class="section-icon">🚀</div>
+                <h2>Kom i gang på 5 minutter</h2>
+            </div>
+
+            <p>Her er din tjekliste til at starte med Claude i undervisningen:</p>
+
+            <ul class="checklist">
+                <li>
+                    <div class="checklist-box" onclick="toggleCheck(this)"></div>
+                    <div>
+                        <strong>Opret gratis konto</strong><br>
+                        <span style="color: var(--claude-warm-gray); font-size: 0.9rem;">Gå til <a href="https://claude.ai" target="_blank" style="color: var(--claude-orange);">claude.ai</a> og tilmeld dig</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="checklist-box" onclick="toggleCheck(this)"></div>
+                    <div>
+                        <strong>Prøv en prompt fra denne guide</strong><br>
+                        <span style="color: var(--claude-warm-gray); font-size: 0.9rem;">Start med noget simpelt - fx at lave quizspørgsmål til dit næste emne</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="checklist-box" onclick="toggleCheck(this)"></div>
+                    <div>
+                        <strong>Eksperimentér med iteration</strong><br>
+                        <span style="color: var(--claude-warm-gray); font-size: 0.9rem;">Følg op på Claudes svar: "Gør det kortere", "Tilpas til 7. klasse", "Giv flere eksempler"</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="checklist-box" onclick="toggleCheck(this)"></div>
+                    <div>
+                        <strong>Test Claudes ærlighed</strong><br>
+                        <span style="color: var(--claude-warm-gray); font-size: 0.9rem;">Spørg om noget meget specialiseret og se, om den indrømmer usikkerhed</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="checklist-box" onclick="toggleCheck(this)"></div>
+                    <div>
+                        <strong>Del med en kollega</strong><br>
+                        <span style="color: var(--claude-warm-gray); font-size: 0.9rem;">Den bedste læring sker, når vi deler erfaringer</span>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="tip-box" style="background: linear-gradient(135deg, #D97706 0%, #EA580C 100%); color: white; margin-top: 2rem;">
+                <span class="tip-icon">✨</span>
+                <div class="tip-content">
+                    <h4 style="color: white;">Et sidste tip</h4>
+                    <p style="color: rgba(255,255,255,0.95);">Claude bliver bedre, jo mere kontekst du giver. Fortæl om dine elever, dit fag, dine udfordringer. Du vil opdage, at samtalen føles mere som en kollega end et værktøj.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Lavet med Claude AI | Fri at dele og tilpasse | 2026</p>
+        <p style="margin-top: 0.5rem;">Lær mere på <a href="https://claude.ai" target="_blank">claude.ai</a> og <a href="https://www.anthropic.com" target="_blank">anthropic.com</a></p>
+    </footer>
+
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabGroup = tab.parentElement;
+
+                // Remove active from all tabs in this group
+                tabGroup.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                // Hide all tab contents and show selected
+                const tabId = tab.dataset.tab;
+                const section = tab.closest('.section');
+                section.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                    if(content.id === tabId) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+
+        // Accordion functionality
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('open');
+        }
+
+        // Copy prompt functionality
+        function copyPrompt(btn) {
+            const promptText = btn.parentElement.textContent.replace('Kopiér', '').trim();
+            navigator.clipboard.writeText(promptText).then(() => {
+                btn.textContent = 'Kopieret!';
+                btn.style.background = '#22c55e';
+                setTimeout(() => {
+                    btn.textContent = 'Kopiér';
+                    btn.style.background = '';
+                }, 2000);
+            });
+        }
+
+        // Checklist functionality
+        function toggleCheck(box) {
+            box.classList.toggle('checked');
+            if(box.classList.contains('checked')) {
+                box.innerHTML = '✓';
+            } else {
+                box.innerHTML = '';
+            }
+        }
+
+        // Smooth scroll for navigation
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Ensure external links open correctly (fix for file:// protocol)
+        document.querySelectorAll('a[target="_blank"]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(link.href, '_blank');
+            });
+        });
+    </script>
+</body>
+</html>
